@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: CoinCurved
-  m_Shader: {fileID: 4800000, guid: e19f3cb6a7e8e764c954e24d15ed6d77, type: 3}
+  m_Shader: {fileID: 4800000, guid: 95707435470643149b091bd7f3c98ab2, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -28,6 +28,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _CurveStrength: 1
     m_Colors: []
   m_BuildTextureStacks: []

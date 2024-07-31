@@ -16,6 +16,9 @@ public class PlayerMovement : MonoBehaviour
     public Button startButton; // Button to start the game
     public AudioSource soundSource;
     public Transform coinPocket;
+    public Transform cameraHook;
+    public CanvasGroup loseCanvas;
+    public GameObject controllerSprite;
 
     private Rigidbody rb;
     private int currentLane = 1; // Start in the middle lane (0: far left, 1: left, 2: middle, 3: right, 4: far right)
@@ -36,6 +39,9 @@ public class PlayerMovement : MonoBehaviour
 
         // Setup countdown display
         countdownText.gameObject.SetActive(false);
+        speedText.gameObject.SetActive(false);
+        timeText.gameObject.SetActive(false);
+        coinText.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -57,10 +63,12 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
             {
                 ChangeLane(-1);
+                controllerSprite.transform.DOShakePosition(0.1f, 1, 10);
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
             {
                 ChangeLane(1);
+                controllerSprite.transform.DOShakePosition(0.1f, 1, 10);
             }
 
             // Smoothly move the player to the target lane position
@@ -86,6 +94,12 @@ public class PlayerMovement : MonoBehaviour
                 Destroy(other.gameObject);
             });
         }
+        if (other.gameObject.CompareTag("Blocker"))
+        {
+            Debug.Log("Game End!");
+            loseCanvas.alpha = 1f;
+
+        }
     }
 
     private void UpdateCoinText()
@@ -98,6 +112,8 @@ public class PlayerMovement : MonoBehaviour
         // Start countdown and game
         startButton.gameObject.SetActive(false); // Hide the start button
         StartCoroutine(CountdownCoroutine());
+        cameraHook.transform.DOLocalMoveY(-70, 3f);
+
     }
 
     private IEnumerator CountdownCoroutine()
@@ -114,6 +130,10 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         countdownText.gameObject.SetActive(false); // Hide countdown text
+        speedText.gameObject.SetActive(true);
+        timeText.gameObject.SetActive(true);
+        coinText.gameObject.SetActive(true);
+
         gameStarted = true; // Start the game
     }
 }
