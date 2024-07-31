@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Control</title>
+    <script>
+        function generateClientId() {
+            return 'client-' + Math.random().toString(36).substr(2, 9);
+        }
+
+        const clientId = generateClientId();
+        const socket = new WebSocket('ws://__SERVER_IP__:8080/GameControl');
+
+        socket.onopen = function() {
+            console.log('WebSocket is connected. Client ID:', clientId);
+        };
+
+        socket.onmessage = function(event) {
+            console.log('Received from server: ' + event.data);
+        };
+
+        socket.onclose = function(event) {
+            if (event.wasClean) {
+                console.log('Connection closed cleanly');
+            } else {
+                console.log('Connection died');
+            }
+        };
+
+        socket.onerror = function(error) {
+            console.error('WebSocket Error: ' + error);
+        };
+
+        function sendCommand(command) {
+            if (socket.readyState === WebSocket.OPEN) {
+                const message = JSON.stringify({ clientId: clientId, command: command });
+                socket.send(message);
+            } else {
+                console.error('WebSocket is not open.');
+            }
+        }
+    </script>
+</head>
+<body>
+    <button onclick="sendCommand('move_left')">Move Left</button>
+    <button onclick="sendCommand('move_right')">Move Right</button>
+</body>
+</html>
