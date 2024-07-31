@@ -12,7 +12,6 @@ public class PathManager : MonoBehaviour
 
     private Queue<GameObject> activePaths = new Queue<GameObject>();
     private float spawnZ = 0f; // Z position to spawn the next path section
-    private bool gameStarted = false;
 
     private void Start()
     {

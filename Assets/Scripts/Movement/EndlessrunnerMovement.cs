@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using DG.Tweening;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class PlayerMovement : MonoBehaviour
     public TextMeshProUGUI coinText;
     public TextMeshProUGUI countdownText; // UI Text for countdown display
     public Button startButton; // Button to start the game
+    public AudioSource soundSource;
+    public Transform coinPocket;
 
     private Rigidbody rb;
     private int currentLane = 1; // Start in the middle lane (0: far left, 1: left, 2: middle, 3: right, 4: far right)
@@ -76,8 +79,12 @@ public class PlayerMovement : MonoBehaviour
         if (other.gameObject.CompareTag("Coin"))
         {
             coinCount++;
+            soundSource.Play();
             UpdateCoinText();
-            Destroy(other.gameObject);
+            other.gameObject.transform.DOMove(coinPocket.transform.position, 1f).OnComplete(() =>
+            {
+                Destroy(other.gameObject);
+            });
         }
     }
 
