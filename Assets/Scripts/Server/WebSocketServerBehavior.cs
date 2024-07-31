@@ -20,11 +20,18 @@ public class WebSocketServerBehavior : WebSocketBehavior
         {
             case "move_left":
                 Debug.Log($"Client {clientId} Moving Left");
-                // Implement the left movement for the specific client
+                if (PlayerMovement.Instance != null)
+                {
+                    PlayerMovement.Instance.HandleLaneSwitch(-1);
+                }
+
                 break;
             case "move_right":
                 Debug.Log($"Client {clientId} Moving Right");
-                // Implement the right movement for the specific client
+                if (PlayerMovement.Instance != null)
+                {
+                    PlayerMovement.Instance.HandleLaneSwitch(1);
+                }
                 break;
             default:
                 Debug.Log($"Unknown command from client {clientId}: {command}");

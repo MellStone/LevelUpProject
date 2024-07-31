@@ -6,6 +6,8 @@ using DG.Tweening;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public static PlayerMovement Instance { get; private set; }
+
     public float initialForwardSpeed = 10f;
     public float laneSwitchSpeed = 10f;
     public float speedIncreaseRate = 0.1f; // Speed increase per second
@@ -28,6 +30,18 @@ public class PlayerMovement : MonoBehaviour
     private int coinCount = 0;
     private bool gameStarted = false;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -42,6 +56,12 @@ public class PlayerMovement : MonoBehaviour
         speedText.gameObject.SetActive(false);
         timeText.gameObject.SetActive(false);
         coinText.gameObject.SetActive(false);
+    }
+
+    public void HandleLaneSwitch(int direction)
+    {
+        ChangeLane(direction);
+        // Additional logic or effects can be added here
     }
 
     private void Update()
@@ -63,13 +83,17 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
             {
                 ChangeLane(-1);
-                controllerSprite.transform.DOShakePosition(0.1f, 1, 10);
+
+                //controllerSprite.transform.DOShakePosition(0.1f, 1, 10);
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
             {
                 ChangeLane(1);
-                controllerSprite.transform.DOShakePosition(0.1f, 1, 10);
+
+                //controllerSprite.transform.DOShakePosition(0.1f, 1, 10);
             }
+
+
 
             // Smoothly move the player to the target lane position
             Vector3 targetPosition = new Vector3(lanes[currentLane], transform.position.y, transform.position.z);
