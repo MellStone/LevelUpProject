@@ -1,28 +1,20 @@
+using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
-using DG.Tweening;
 
-public class PlayerMovement : MonoBehaviour
+public class ReadyPlayer2 : MonoBehaviour
 {
-    public static PlayerMovement Instance { get; private set; }
-
     public float initialForwardSpeed = 10f;
     public float laneSwitchSpeed = 10f;
     public float speedIncreaseRate = 0.1f; // Speed increase per second
     public TextMeshProUGUI speedText; // UI Text for speed display
     public TextMeshProUGUI timeText; // UI Text for time display
     public TextMeshProUGUI coinText;
-    public TextMeshProUGUI countdownText; // UI Text for countdown display
-    public Button startButton; // Button to start the game
-    public AudioSource soundSource;
-    public Transform coinPocket;
-    public Transform cameraHook;
-    public CanvasGroup loseCanvas;
-    public GameObject controllerSprite;
 
-    public ReadyPlayer2 player2;
+    public Transform coinPocket;
+    public GameObject controllerSprite;
 
     private Rigidbody rb;
     private int currentLane = 1; // Start in the middle lane (0: far left, 1: left, 2: middle, 3: right, 4: far right)
@@ -32,29 +24,12 @@ public class PlayerMovement : MonoBehaviour
     private int coinCount = 0;
     private bool gameStarted = false;
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         forwardSpeed = initialForwardSpeed;
         UpdateCoinText();
 
-        // Setup start button
-        startButton.onClick.AddListener(StartGame);
-
-        // Setup countdown display
-        countdownText.gameObject.SetActive(false);
         speedText.gameObject.SetActive(false);
         timeText.gameObject.SetActive(false);
         coinText.gameObject.SetActive(false);
@@ -82,13 +57,13 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, forwardSpeed);
 
             // Handle lane switching
-            if (Input.GetKeyDown(KeyCode.A))
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 ChangeLane(-1);
 
                 //controllerSprite.transform.DOShakePosition(0.1f, 1, 10);
             }
-            else if (Input.GetKeyDown(KeyCode.D))
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 ChangeLane(1);
 
@@ -113,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
         if (other.gameObject.CompareTag("Coin"))
         {
             coinCount++;
-            soundSource.Play();
+            //soundSource.Play();
             UpdateCoinText();
             other.gameObject.transform.DOMove(coinPocket.transform.position, 1f).OnComplete(() =>
             {
@@ -123,7 +98,7 @@ public class PlayerMovement : MonoBehaviour
         if (other.gameObject.CompareTag("Blocker"))
         {
             Debug.Log("Game End!");
-            loseCanvas.alpha = 1f;
+            //loseCanvas.alpha = 1f;
 
         }
     }
@@ -133,34 +108,38 @@ public class PlayerMovement : MonoBehaviour
         coinText.text = "Coins: " + coinCount;
     }
 
-    private void StartGame()
+    public void StartGame()
     {
         // Start countdown and game
-        startButton.gameObject.SetActive(false); // Hide the start button
-        StartCoroutine(CountdownCoroutine());
-        cameraHook.transform.DOLocalMoveY(-70, 3f);
+        //startButton.gameObject.SetActive(false); // Hide the start button
+        //StartCoroutine(CountdownCoroutine());
+        //cameraHook.transform.DOLocalMoveY(-70, 3f);
+        gameStarted = true;
 
-    }
-
-    private IEnumerator CountdownCoroutine()
-    {
-        countdownText.gameObject.SetActive(true); // Show countdown text
-
-        for (int i = 3; i > 0; i--)
-        {
-            countdownText.text = i.ToString();
-            yield return new WaitForSeconds(1f);
-        }
-
-        countdownText.text = "Go!";
-        yield return new WaitForSeconds(1f);
-
-        countdownText.gameObject.SetActive(false); // Hide countdown text
         speedText.gameObject.SetActive(true);
         timeText.gameObject.SetActive(true);
         coinText.gameObject.SetActive(true);
 
-        gameStarted = true; // Start the game
-        player2.StartGame();
     }
+
+    //private IEnumerator CountdownCoroutine()
+    //{
+    //    countdownText.gameObject.SetActive(true); // Show countdown text
+
+    //    for (int i = 3; i > 0; i--)
+    //    {
+    //        countdownText.text = i.ToString();
+    //        yield return new WaitForSeconds(1f);
+    //    }
+
+    //    countdownText.text = "Go!";
+    //    yield return new WaitForSeconds(1f);
+
+    //    countdownText.gameObject.SetActive(false); // Hide countdown text
+    //    speedText.gameObject.SetActive(true);
+    //    timeText.gameObject.SetActive(true);
+    //    coinText.gameObject.SetActive(true);
+
+    //    gameStarted = true; // Start the game
+    //}
 }
