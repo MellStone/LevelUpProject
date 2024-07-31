@@ -31,8 +31,10 @@ public class HttpServer : MonoBehaviour
         string clientIP = request.RemoteEndPoint.ToString();
         string userAgent = request.UserAgent;
         Debug.Log($"Request from {clientIP}, User-Agent: {userAgent}");
-        
-        string templatePath = Path.Combine(Application.dataPath, "WebPage/index.html.template");
+
+        // StreamingAssets folder (save exactly file like in editor)
+        // For build version otherwise it didn't open
+        string templatePath = Path.Combine(Application.streamingAssetsPath, "index.html.template");
         string page = File.ReadAllText(templatePath);
 
         // Replacing the placeholder with a real IP address

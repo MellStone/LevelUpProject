@@ -20,17 +20,17 @@ public class WebSocketServerBehavior : WebSocketBehavior
         {
             case "move_left":
                 Debug.Log($"Client {clientId} Moving Left");
-                if (PlayerMovement.Instance != null)
+                if (EndlessrunnerMovement.Instance != null)
                 {
-                    PlayerMovement.Instance.HandleLaneSwitch(-1);
+                    EndlessrunnerMovement.Instance.HandleLaneSwitch(-1);
                 }
 
                 break;
             case "move_right":
                 Debug.Log($"Client {clientId} Moving Right");
-                if (PlayerMovement.Instance != null)
+                if (EndlessrunnerMovement.Instance != null)
                 {
-                    PlayerMovement.Instance.HandleLaneSwitch(1);
+                    EndlessrunnerMovement.Instance.HandleLaneSwitch(1);
                 }
                 break;
             default:
