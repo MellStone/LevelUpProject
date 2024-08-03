@@ -17,7 +17,7 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: 0.9254902, g: 0.9254902, b: 0.9254902, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.03
+  m_FogDensity: 0.015
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 1, g: 1, b: 1, a: 1}
@@ -11077,8 +11077,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathPrefabs:
-  - {fileID: 1437921242748672858, guid: e9b700e9f0ff95c419ef8255e9ed2c5c, type: 3}
+  - {fileID: 1437921242748672858, guid: c565db26b74130b479bb2d3690128f17, type: 3}
   - {fileID: 1437921242748672858, guid: dcaf8025a77b58447be82cad765ffb54, type: 3}
+  - {fileID: 1437921242748672858, guid: 7232ef8dc6615794b89e340146d4ea18, type: 3}
+  - {fileID: 1437921242748672858, guid: 30b12ed8ea95c034d80b4e03d83c29c3, type: 3}
+  - {fileID: 1437921242748672858, guid: 7e92291b614880f4ea58dfef3ae361c3, type: 3}
+  - {fileID: 1437921242748672858, guid: 5493ddcc398a884418bc1018d19f5511, type: 3}
+  - {fileID: 1437921242748672858, guid: 2d613546e32e096458870a141e2c6009, type: 3}
+  - {fileID: 1437921242748672858, guid: e9b700e9f0ff95c419ef8255e9ed2c5c, type: 3}
+  - {fileID: 1437921242748672858, guid: d78ef49b7bff0e641a0f59a6bc3fa518, type: 3}
+  - {fileID: 1437921242748672858, guid: 659c277da962c80449e4e9bb0a7f5483, type: 3}
   numberOfActivePaths: 3
   pathLength: 30
   playerTransform: {fileID: 1626673356}
@@ -11115,7 +11123,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &472953902
 MonoBehaviour:
   m_ObjectHideFlags: 0

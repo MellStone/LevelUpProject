@@ -4,9 +4,9 @@ using UnityEngine.UI;
 using System.Collections;
 using DG.Tweening;
 
-public class PlayerMovement : MonoBehaviour
+public class EndlessrunnerMovement : MonoBehaviour
 {
-    public static PlayerMovement Instance { get; private set; }
+    public static EndlessrunnerMovement Instance { get; private set; }
 
     public float initialForwardSpeed = 10f;
     public float laneSwitchSpeed = 10f;
