@@ -38,7 +38,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Texture2D:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: d886e38f0236f28488af9506b78e59f2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -56,6 +56,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Backwards_Strength: 0
+    - _BendAmount: 0.0085
     - _Metallic: 0
     - _Power: 2
     - _QueueControl: 0
@@ -63,6 +64,6 @@ Material:
     - _Sideways_Strength: 0.0085
     - _Smoothness: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 0}
     - _Emission: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

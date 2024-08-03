@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Blue
+  m_Name: Blocked
   m_Shader: {fileID: -6465566751694194690, guid: 28d6cc9f52474c84682a7ab14f750793,
     type: 3}
   m_Parent: {fileID: 0}
@@ -57,13 +57,13 @@ Material:
     m_Floats:
     - _Backwards_Strength: 0
     - _BendAmount: 0.0085
-    - _Metallic: 0.01
+    - _Metallic: 0
     - _Power: 2
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Sideways_Strength: 0.0085
     - _Smoothness: 0
     m_Colors:
-    - _Color: {r: 0, g: 0.5317211, b: 0.6603774, a: 1}
-    - _Emission: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _Emission: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
