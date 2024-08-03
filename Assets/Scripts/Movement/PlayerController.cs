@@ -13,7 +13,9 @@ public class PlayerController : MonoBehaviour
     public AudioSource soundSource;
     public KeyCode leftKey = KeyCode.None;
     public KeyCode rightKey = KeyCode.None;
-
+    public GameObject controllerSprite;
+    
+    
     private Rigidbody rb;
     private int currentLane = 1; // Start in the middle lane (0: far left, 1: left, 2: middle, 3: right, 4: far right)
     private float[] lanes = { -4f, 0f, 4f }; // Positions for lanes
@@ -58,10 +60,20 @@ public class PlayerController : MonoBehaviour
             // Handle local lane switching
             if (Input.GetKeyDown(leftKey))
             {
+                controllerSprite.transform.DORotate(new Vector3(90f, -45f, 0f), 0.2f).OnComplete(() =>{
+                    
+                    controllerSprite.transform.DORotate(new Vector3(90f, 0f, 0f), 0.2f);
+                });
+                //controllerSprite.transform.DOShakePosition(0.1f, 1, 10);
                 HandleLaneSwitch(-1);
             }
             else if (Input.GetKeyDown(rightKey))
             {
+                controllerSprite.transform.DORotate(new Vector3(90f, 45f, 0f), 0.2f).OnComplete(() =>{
+                    
+                    controllerSprite.transform.DORotate(new Vector3(90f, 0f, 0f), 0.2f);
+                });
+                //controllerSprite.transform.DOShakePosition(0.1f, 1, 10);
                 HandleLaneSwitch(1);
             }
 

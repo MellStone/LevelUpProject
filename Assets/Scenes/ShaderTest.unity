@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.8364287, g: 0.8364287, b: 0.8364287, a: 1}
+  m_IndirectSpecularColor: {r: 1.1533233, g: 1.1533233, b: 1.1533233, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10378,13 +10378,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.49999967, y: 0.0000014277132, z: 0.0000003825678, w: 0.8660257}
-  m_LocalPosition: {x: -0, y: -956.7, z: -129}
-  m_LocalScale: {x: 20, y: 20, z: 20}
+  m_LocalRotation: {x: 0.2588195, y: -0.0000020191221, z: 0.0000020191076, w: 0.96592575}
+  m_LocalPosition: {x: 0.00027318083, y: 6.9500046, z: -47.835007}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 459800982}
-  m_Father: {fileID: 1626673356}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -60, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
@@ -10439,10 +10439,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 330585543}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6750d45520d090549b72ccfcf37f9c56, type: 3}
+  m_Script: {fileID: 11500000, guid: cdba175c567e97548a07f9193de79d02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curveStrength: -0.01
+  player1: {fileID: 457156761}
+  player2: {fileID: 894472536}
+  offset: {x: 0, y: 8, z: -5}
 --- !u!1 &405553473
 GameObject:
   m_ObjectHideFlags: 0
@@ -10541,6 +10543,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 405553473}
+  duration: 1
+  strength: 0.2
+  vibrato: 1
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -10659,6 +10664,60 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!1 &411663147
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 411663149}
+  - component: {fileID: 411663148}
+  m_Layer: 0
+  m_Name: Game Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &411663148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 411663147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dca82418ec87de24ea65277eea751d77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialForwardSpeed: 10
+  speedIncreaseRate: 0.1
+  speedText: {fileID: 1991545278}
+  timeText: {fileID: 1032869701}
+  coinText: {fileID: 600666247}
+  countdownText: {fileID: 446796766}
+  startButton: {fileID: 1967340155}
+  loseCanvas: {fileID: 1480549488}
+  player1: {fileID: 457156765}
+  player2: {fileID: 894472538}
+--- !u!4 &411663149
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 411663147}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.15900819, y: 2.5584972, z: -1.8592757}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &446796764
 GameObject:
   m_ObjectHideFlags: 0
@@ -10884,7 +10943,7 @@ GameObject:
   m_Component:
   - component: {fileID: 457156761}
   - component: {fileID: 457156762}
-  - component: {fileID: 457156763}
+  - component: {fileID: 457156765}
   - component: {fileID: 457156764}
   m_Layer: 0
   m_Name: PlayerLogic
@@ -10901,13 +10960,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 457156760}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1626673356}
-  m_Father: {fileID: 1711496296}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &457156762
 BoxCollider:
@@ -10930,32 +10989,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.7, y: 1, z: 2}
   m_Center: {x: 0, y: 0.85, z: -0.15}
---- !u!114 &457156763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 457156760}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dca82418ec87de24ea65277eea751d77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialForwardSpeed: 10
-  laneSwitchSpeed: 10
-  speedIncreaseRate: 0.1
-  speedText: {fileID: 1991545278}
-  timeText: {fileID: 1032869701}
-  coinText: {fileID: 600666247}
-  countdownText: {fileID: 446796766}
-  startButton: {fileID: 1967340155}
-  soundSource: {fileID: 2045638085}
-  coinPocket: {fileID: 459800982}
-  cameraHook: {fileID: 330585546}
-  loseCanvas: {fileID: 1480549488}
-  controllerSprite: {fileID: 1626673355}
-  player2: {fileID: 894472538}
 --- !u!54 &457156764
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10983,6 +11016,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &457156765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 457156760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8753f7d03554d9f48a87f795d756c60d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  laneSwitchSpeed: 10
+  speedText: {fileID: 1991545278}
+  timeText: {fileID: 1032869701}
+  coinText: {fileID: 600666247}
+  coinPocket: {fileID: 459800982}
+  soundSource: {fileID: 2045638085}
+  leftKey: 0
+  rightKey: 0
+  controllerSprite: {fileID: 1626673355}
 --- !u!1 &459800981
 GameObject:
   m_ObjectHideFlags: 0
@@ -11047,7 +11101,7 @@ MonoBehaviour:
   - {fileID: 1437921242748672858, guid: c565db26b74130b479bb2d3690128f17, type: 3}
   numberOfActivePaths: 3
   pathLength: 30
-  playerTransform: {fileID: 1626673356}
+  playerTransform: {fileID: 457156761}
   removalDelay: 2
 --- !u!4 &469857960
 Transform:
@@ -11626,13 +11680,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 894472535}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 531574237}
-  m_Father: {fileID: 1711496296}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &894472537
 Rigidbody:
@@ -11673,13 +11727,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8753f7d03554d9f48a87f795d756c60d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialForwardSpeed: 10
   laneSwitchSpeed: 10
-  speedIncreaseRate: 0.1
   speedText: {fileID: 1809530445}
   timeText: {fileID: 586807297}
   coinText: {fileID: 286767590}
   coinPocket: {fileID: 459800982}
+  soundSource: {fileID: 2045638085}
+  leftKey: 0
+  rightKey: 0
   controllerSprite: {fileID: 531574236}
 --- !u!65 &894472539
 BoxCollider:
@@ -12468,7 +12523,6 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2045638084}
-  - {fileID: 330585546}
   m_Father: {fileID: 457156761}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!212 &1626673357
@@ -12551,9 +12605,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 457156761}
-  - {fileID: 894472536}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1809530443
@@ -18261,6 +18313,9 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 738313141197494569}
   - {fileID: 472953904}
+  - {fileID: 330585546}
+  - {fileID: 457156761}
+  - {fileID: 894472536}
   - {fileID: 1711496296}
   - {fileID: 469857960}
   - {fileID: 2047788241}
@@ -18272,3 +18327,4 @@ SceneRoots:
   - {fileID: 317973772}
   - {fileID: 1877315597}
   - {fileID: 980645828}
+  - {fileID: 411663149}
