@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject controllerSprite;
 
     public ReadyPlayer2 player2;
+    public Rigidbody cameraRb;
 
     private Rigidbody rb;
     private int currentLane = 1; // Start in the middle lane (0: far left, 1: left, 2: middle, 3: right, 4: far right)
@@ -80,19 +81,24 @@ public class PlayerMovement : MonoBehaviour
 
             // Move the player forward
             rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, forwardSpeed);
+            cameraRb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, forwardSpeed);
 
             // Handle lane switching
             if (Input.GetKeyDown(KeyCode.A))
             {
+                controllerSprite.transform.DORotate(new Vector3(90f, -45f, 0f), 0.2f).OnComplete(()
+                =>{
+                    controllerSprite.transform.DORotate(new Vector3(90f, 0f, 0f), 0.2f);
+                });
                 ChangeLane(-1);
-
-                //controllerSprite.transform.DOShakePosition(0.1f, 1, 10);
             }
             else if (Input.GetKeyDown(KeyCode.D))
             {
+                controllerSprite.transform.DORotate(new Vector3(90f, 45f, 0f), 0.2f).OnComplete(()
+                => {
+                    controllerSprite.transform.DORotate(new Vector3(90f, 0f, 0f), 0.2f);
+                });
                 ChangeLane(1);
-
-                //controllerSprite.transform.DOShakePosition(0.1f, 1, 10);
             }
 
 
@@ -138,12 +144,13 @@ public class PlayerMovement : MonoBehaviour
         // Start countdown and game
         startButton.gameObject.SetActive(false); // Hide the start button
         StartCoroutine(CountdownCoroutine());
-        cameraHook.transform.DOLocalMoveY(-70, 3f);
+        cameraHook.transform.DOLocalMoveZ(-3, 3f);
 
     }
 
     private IEnumerator CountdownCoroutine()
     {
+
         countdownText.gameObject.SetActive(true); // Show countdown text
 
         for (int i = 3; i > 0; i--)
@@ -153,6 +160,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         countdownText.text = "Go!";
+        countdownText.transform.DOScale(3f, 1f);
         yield return new WaitForSeconds(1f);
 
         countdownText.gameObject.SetActive(false); // Hide countdown text

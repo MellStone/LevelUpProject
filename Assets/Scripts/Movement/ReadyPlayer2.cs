@@ -100,6 +100,12 @@ public class ReadyPlayer2 : MonoBehaviour
             Debug.Log("Game End!");
             //loseCanvas.alpha = 1f;
 
+            Destroy(this.gameObject);
+
+            speedText.gameObject.SetActive(false);
+            timeText.gameObject.SetActive(false);
+            coinText.gameObject.SetActive(false);
+
         }
     }
 
