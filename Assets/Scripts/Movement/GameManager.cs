@@ -24,10 +24,10 @@ public class GameController : MonoBehaviour
     public TextMeshProUGUI highScoreText;
 
     private float forwardSpeed;
-    private float elapsedTime = 0f;
+    //private float elapsedTime = 0f;
     private int coinCount1 = 0;
     private int coinCount2 = 0;
-    private bool gameStarted = false;
+    //private bool gameStarted = false;
     private GameData gameData;
 
     private void Awake()
@@ -59,26 +59,26 @@ public class GameController : MonoBehaviour
         coinText1.gameObject.SetActive(false);
         coinText2.gameObject.SetActive(false);
 
-        // Assign control keys for players
-        player1.leftKey = KeyCode.A;
-        player1.rightKey = KeyCode.D;
-        player2.leftKey = KeyCode.LeftArrow;
-        player2.rightKey = KeyCode.RightArrow;
+        // Assign control keys for players //If player controller has a key choose feature why does this exist??
+        //player1.leftKey = KeyCode.A;
+        //player1.rightKey = KeyCode.D;
+        //player2.leftKey = KeyCode.LeftArrow;
+        //player2.rightKey = KeyCode.RightArrow;
     }
 
-    private void Update()
-    {
-        if (gameStarted)
-        {
-            // Increase speed over time
-            elapsedTime += Time.deltaTime;
-            forwardSpeed = initialForwardSpeed + elapsedTime * speedIncreaseRate;
+    //private void Update()
+    //{
+    //    if (gameStarted)
+    //    {
+    //        // Increase speed over time
+    //        elapsedTime += Time.deltaTime;
+    //        forwardSpeed = initialForwardSpeed + elapsedTime * speedIncreaseRate;
 
-            // Update UI
-            speedText.text = "Speed: " + forwardSpeed.ToString("F2") + " m/s";
-            timeText.text = "Time: " + elapsedTime.ToString("F2") + " s";
-        }
-    }
+    //        // Update UI
+    //        speedText.text = "Speed: " + forwardSpeed.ToString("F2") + " m/s";
+    //        timeText.text = "Time: " + elapsedTime.ToString("F2") + " s";
+    //    }
+    //}
 
     public void AddCoin(PlayerController player)
     {
@@ -130,7 +130,7 @@ public class GameController : MonoBehaviour
         coinText1.gameObject.SetActive(true);
         coinText2.gameObject.SetActive(true);
 
-        gameStarted = true; // Start the game
+        //gameStarted = true; // Start the game
         player1.StartGame(forwardSpeed);
         player2.StartGame(forwardSpeed);
     }
@@ -138,7 +138,7 @@ public class GameController : MonoBehaviour
     public void EndGame()
     {
         loseCanvas.alpha = 1f;
-        gameStarted = false;
+        //gameStarted = false;
 
         // Display final stats for each player
         player1StatsText.text = $"Player 1 - Final Coins: {player1.GetCoinCount()} Final Time: {player1.GetElapsedTime():F2} s";
@@ -146,6 +146,9 @@ public class GameController : MonoBehaviour
 
         // Save scores
         SaveScores();
+
+        player1.EndGame();
+        player2.EndGame();
     }
 
     private void SaveScores()

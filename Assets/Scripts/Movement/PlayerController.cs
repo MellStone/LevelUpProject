@@ -15,12 +15,16 @@ public class PlayerController : MonoBehaviour
     public KeyCode rightKey = KeyCode.None;
 
     private Rigidbody rb;
-    private int currentLane = 1; // Start in the middle lane (0: far left, 1: left, 2: middle, 3: right, 4: far right)
+    private int currentLane = 1; // Middle start (left = 0, center = 1, right = 2) 
     private float[] lanes = { -4f, 0f, 4f }; // Positions for lanes
     private float forwardSpeed;
     private float elapsedTime = 0f;
     private int coinCount = 0;
     private bool gameStarted = false;
+    private bool shouldStop = false;
+
+    public GameObject controllerSprite;
+
 
     private void Start()
     {
@@ -38,6 +42,11 @@ public class PlayerController : MonoBehaviour
         speedText.gameObject.SetActive(true);
         timeText.gameObject.SetActive(true);
         coinText.gameObject.SetActive(true);
+    }
+
+    public void EndGame()
+    {
+        gameStarted = false;
     }
 
     private void Update()
@@ -59,10 +68,24 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKeyDown(leftKey))
             {
                 HandleLaneSwitch(-1);
+
+                controllerSprite.transform.DORotate(new Vector3(90f, -45f, 0f), 0.2f)
+                    .OnComplete(() => 
+                    {
+                        controllerSprite.transform.DORotate(new Vector3(90f, 0f, 0f), 0.2f);
+                    });
+                //controllerSprite.transform.DOShakePosition(0.1f, 1, 10);
             }
             else if (Input.GetKeyDown(rightKey))
             {
                 HandleLaneSwitch(1);
+
+                controllerSprite.transform.DORotate(new Vector3(90f, 45f, 0f), 0.2f)
+                    .OnComplete(() =>
+                    {
+                        controllerSprite.transform.DORotate(new Vector3(90f, 0f, 0f), 0.2f);
+                    });
+                //controllerSprite.transform.DOShakePosition(0.1f, 1, 10);
             }
 
             // Smoothly move the player to the target lane position
@@ -75,6 +98,25 @@ public class PlayerController : MonoBehaviour
     {
         currentLane = Mathf.Clamp(currentLane + direction, 0, lanes.Length - 1);
         // Add visual or audio feedback for lane switching if necessary
+        switch (currentLane)
+        {
+            case 0:
+                Debug.Log("Red");
+
+                break;
+
+            case 1:
+                Debug.Log("Yellow");
+
+
+                break;
+
+            case 2:
+                Debug.Log("Blue");
+
+
+                break;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
