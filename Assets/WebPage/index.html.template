@@ -8,7 +8,7 @@
         body {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             height: 100vh;
             margin: 0;
@@ -16,19 +16,25 @@
             font-family: Arial, sans-serif;
         }
 
-        .container {
-            text-align: center;
+        .top-row, .bottom-row {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
         }
 
-        h1 {
-            color: #333;
+        .top-row {
+            height: 30%;
+        }
+
+        .bottom-row {
+            height: 70%;
         }
 
         .btn {
-            display: inline-block;
-            padding: 15px 30px;
+            flex: 1;
             margin: 10px;
-            font-size: 18px;
+            padding: 15px 20px;
+            font-size: 72px;
             color: white;
             background-color: #007bff;
             border: none;
@@ -85,10 +91,15 @@
     </script>
 </head>
 <body>
-    <div class="container">
-        <h1>WebSocket Control</h1>
-        <button class="btn" onclick="sendCommand('move_left')">Move Left</button>
-        <button class="btn" onclick="sendCommand('move_right')">Move Right</button>
-    </div>
+<div class="top-row">
+    <button class="btn" onclick="sendCommand('action_1')">Action 1</button>
+    <button class="btn" onclick="sendCommand('action_2')">🡹</button>
+    <button class="btn" onclick="sendCommand('Special')">Action 3</button>
+</div>
+
+<div class="bottom-row">
+    <button class="btn" onclick="sendCommand('move_left')">🡸</button>
+    <button class="btn" onclick="sendCommand('move_right')">🡺</button>
+</div>
 </body>
 </html>

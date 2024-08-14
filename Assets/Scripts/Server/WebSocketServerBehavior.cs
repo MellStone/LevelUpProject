@@ -2,6 +2,7 @@ using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class WebSocketServerBehavior : WebSocketBehavior
 {
@@ -52,6 +53,29 @@ public class WebSocketServerBehavior : WebSocketBehavior
                     player.HandleLaneSwitch(1);
                 }
                 break;
+            
+            case "special_left":
+                Debug.Log($"Client {clientId} use special left");
+                if (player != null)
+                {
+                    player.HandleSpecialSwitch(-1);
+                }
+                break;
+            case "special_right":
+                Debug.Log($"Client {clientId} use special right");
+                if (player != null)
+                {
+                    player.HandleSpecialSwitch(1);
+                }
+                break;
+            case "special_mid":
+                Debug.Log($"Client {clientId} use special mid");
+                if (player != null)
+                {
+                    player.HandleSpecialSwitch(0);
+                }
+                break;
+            
             default:
                 Debug.Log($"Unknown command from client {clientId}: {command}");
                 break;

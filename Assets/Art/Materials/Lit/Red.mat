@@ -65,5 +65,5 @@ Material:
     - _Smoothness: 0
     m_Colors:
     - _Color: {r: 0.78823537, g: 0.10980393, b: 0.09019608, a: 1}
-    - _Emission: {r: 0, g: 0, b: 0, a: 1}
+    - _Emission: {r: 0, g: 0, b: 0, a: 0.3647059}
   m_BuildTextureStacks: []
