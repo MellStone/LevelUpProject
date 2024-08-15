@@ -34,7 +34,7 @@ public class HttpServer : MonoBehaviour
 
         // StreamingAssets folder (save exactly file like in editor)
         // For build version otherwise it didn't open
-        string templatePath = Path.Combine(Application.streamingAssetsPath, "index.html.template");
+        string templatePath = System.IO.Path.Combine(Application.streamingAssetsPath, "index.html.template");
         string page = File.ReadAllText(templatePath);
 
         // Replacing the placeholder with a real IP address
