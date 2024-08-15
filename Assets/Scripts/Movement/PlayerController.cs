@@ -1,10 +1,10 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI; // Добавлено для работы с UI-кнопками
 
 public class PlayerController : MonoBehaviour
 {
-
     public float laneSwitchSpeed = 10f;
     public TextMeshProUGUI speedText; // UI Text for speed display
     public TextMeshProUGUI timeText; // UI Text for time display
@@ -13,7 +13,9 @@ public class PlayerController : MonoBehaviour
     public AudioSource soundSource;
     public KeyCode leftKey = KeyCode.None;
     public KeyCode rightKey = KeyCode.None;
-    
+
+    public Button startButton; // Кнопка для начала игры
+
     private Rigidbody rb;
     private int currentLane = 1; // Middle start (left = 0, center = 1, right = 2) 
     private float[] lanes = { -4f, 0f, 4f }; // Positions for lanes
@@ -22,9 +24,9 @@ public class PlayerController : MonoBehaviour
     private int coinCount = 0;
 
     public int hP = 100;
-    
-    private bool isGameStarted = false;
 
+    private bool isShouldStop = false;
+    public bool isGameOvered = false;
 
     private int turnDirection = 0;
     public GameObject controllerSprite;
@@ -43,35 +45,41 @@ public class PlayerController : MonoBehaviour
     public void StartGame(float initialSpeed)
     {
         forwardSpeed = initialSpeed;
-        isGameStarted = true;
-        
+        isShouldStop = false;
+        isGameOvered = false;
+        elapsedTime = 0f;
+        coinCount = 0;
+        hP = 100;
+
         speedText.gameObject.SetActive(true);
         timeText.gameObject.SetActive(true);
         coinText.gameObject.SetActive(true);
-        coinText.text = "Coins: " + 0;
+        coinText.text = "Coins: " + coinCount;
     }
 
     public void EndGame()
     {
-        isGameStarted = false;
+        isShouldStop = true;
+        isGameOvered = true;
+        rb.velocity = Vector3.zero; // Остановить движение игрока
     }
 
     private void Update()
     {
-        if (!isGameStarted) return;
+        if (isShouldStop) return;
         
-        // Increase speed over time
+        // Увеличение скорости со временем
         elapsedTime += Time.deltaTime;
         forwardSpeed += Time.deltaTime * GameController.Instance.speedIncreaseRate;
 
-        // Update UI
+        // Обновление UI
         speedText.text = "Speed: " + forwardSpeed.ToString("F2") + " m/s";
         timeText.text = "Time: " + elapsedTime.ToString("F2") + " s";
 
-        // Move the player forward
+        // Движение игрока вперед
         rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, forwardSpeed);
 
-        // Handle local lane switching
+        // Переключение между линиями
         if (Input.GetKeyDown(leftKey))
         {
             HandleLaneSwitch(-1);
@@ -86,20 +94,26 @@ public class PlayerController : MonoBehaviour
             LaneSwitchAnimate(turnDirection);
             turnDirection = 0;
         }
-        // Smoothly move the player to the target lane position
+
+        // Плавное перемещение игрока в целевую позицию линии
         Vector3 targetPosition = new Vector3(lanes[currentLane], transform.position.y, transform.position.z);
         transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * laneSwitchSpeed);
+        
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
+        {
+            WebSocketServerBehavior.ResetClients();
+        }
     }
 
     private void LaneSwitchAnimate(int direction)
     {
+
         if (direction == -1)
         {
             controllerSprite.transform.DORotate(new Vector3(90f, -45f, 0f), 0.2f).OnComplete(() =>
             {
                 controllerSprite.transform.DORotate(new Vector3(90f, 0f, 0f), 0.2f);
             });
-            Debug.Log("Animating: " + direction);
         }
         else if (direction == 1)
         {
@@ -107,15 +121,9 @@ public class PlayerController : MonoBehaviour
             {
                 controllerSprite.transform.DORotate(new Vector3(90f, 0f, 0f), 0.2f);
             });
-            Debug.Log("Animating: "+ direction);
-        }   
-        else
-        {
-            Debug.Log("It doesnt work :(");
-            Debug.Log("Current side: " + direction);
         }
     }
-    
+
     public void HandleLaneSwitch(int direction)
     {
         currentLane = Mathf.Clamp(currentLane + direction, 0, lanes.Length - 1);
@@ -124,7 +132,6 @@ public class PlayerController : MonoBehaviour
 
     public void HandleSpecialSwitch(int direction) // -1 left, 0 mid, 1 right;
     {
-        
         sequence.PlaySequence(direction);
         
         switch (direction)
@@ -143,6 +150,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Coin"))
@@ -163,6 +171,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                EndGame();
                 GameController.Instance.GameOver();
             }
         }

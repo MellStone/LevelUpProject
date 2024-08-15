@@ -11,7 +11,8 @@ public class MultiplayerSystem : MonoBehaviour
     private int hp = 100;
     private int battleCount = 35;
     private int playerCliks = 0;
-    
+
+    [SerializeField] private WebSocketServerBehavior webSocket;
     private PlayerController playerController;
     private void Start()
     {

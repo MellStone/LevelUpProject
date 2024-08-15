@@ -2,12 +2,16 @@ using UnityEngine;
 using System.IO;
 using System.Net;
 using System.Text;
+using TMPro;
 
 public class HttpServer : MonoBehaviour
 {
+
+    public TextMeshProUGUI textM;
+    
     private HttpListener listener;
     private string localIP;
-
+    
     void Start()
     {
         localIP = GetLocalIPAddress();
@@ -16,6 +20,8 @@ public class HttpServer : MonoBehaviour
         listener.Start();
         listener.BeginGetContext(new System.AsyncCallback(OnRequest), listener);
         Debug.Log($"HTTP server started at http://{localIP}:8081");
+
+        textM.text = $"{localIP}:8081";
     }
 
     private void OnRequest(System.IAsyncResult result)

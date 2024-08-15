@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 
 public class GameController : MonoBehaviour
@@ -12,17 +13,20 @@ public class GameController : MonoBehaviour
     public float speedIncreaseRate = 0.1f; // Speed increase per second
     public TextMeshProUGUI countdownText; // UI Text for countdown display
     public Button startButton; // Button to start the game
+    public Button restartButton; // Button to restart the game
     public CanvasGroup loseCanvas;
     public PlayerController player1;
     public PlayerController player2;
-    public TextMeshProUGUI player1StatsText;
-    public TextMeshProUGUI player2StatsText;
+    
     public TextMeshProUGUI highScoreText;
-
+    public TextMeshProUGUI leaderboardText; // Text UI для отображения таблицы лидеров
+    
     private float forwardSpeed;
-    //private float elapsedTime = 0f;
-    //private bool gameStarted = false;
+    
     private GameData gameData;
+
+    public bool isInMenu = true;
+    public bool isGameOver = false;
     public bool isMultiplayer = true;
     private void Awake()
     {
@@ -50,10 +54,13 @@ public class GameController : MonoBehaviour
         
     }
 
-    private void StartGame()
+    public void StartGame()
     {
+        Debug.Log("GameStarted");
         // Start countdown and game
         startButton.gameObject.SetActive(false); // Hide the start button
+        Debug.Log("GameStarted");
+        isInMenu = false;
         StartCoroutine(CountdownCoroutine());
     }
 
@@ -80,30 +87,68 @@ public class GameController : MonoBehaviour
 
     public void GameOver()
     {
-        loseCanvas.alpha = 1f;
-        //gameStarted = false;
-
-        // Display final stats for each player
-        player1StatsText.text = $"Player 1 - Final Coins: {player1.GetCoinCount()} Final Time: {player1.GetElapsedTime():F2} s";
-        player2StatsText.text = $"Player 2 - Final Coins: {player2.GetCoinCount()} Final Time: {player2.GetElapsedTime():F2} s";
-
         // Save scores
         SaveScores();
-        
-    }
 
+        // Проверка активности второго игрока
+        if (player2.isActiveAndEnabled)
+        {
+            // Если второй игрок активен, проверяем, завершили ли игру оба игрока
+            if (player2.isGameOvered && player1.isGameOvered)
+            {
+                loseCanvas.alpha = 1f;
+                DisplayTop10();
+                isInMenu = true;
+                isGameOver = true;
+            }
+        }
+        else
+        {
+            // Если второй игрок не активен, сразу показываем таблицу лидеров
+            loseCanvas.alpha = 1f;
+            DisplayTop10();
+            isInMenu = true;
+            isGameOver = true;
+        }
+    }
+    public void RestartGame()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    }
+    
+    private void DisplayTop10()
+    {
+        // Загружаем список игроков из сохранённых данных
+        List<PlayerData> players = gameData.players;
+
+        // Сортируем по очкам в порядке убывания
+        players.Sort((p1, p2) => p2.score.CompareTo(p1.score));
+
+        // Берём топ-10
+        List<PlayerData> top10 = players.GetRange(0, Mathf.Min(10, players.Count));
+
+        // Формируем строку для отображения таблицы лидеров
+        string leaderboard = "Top 10 Players:\n";
+        for (int i = 0; i < top10.Count; i++)
+        {
+            leaderboard += $"{i + 1}. {top10[i].playerName} - {top10[i].score}\n";
+        }
+
+        // Отображаем на UI
+        leaderboardText.text = leaderboard;
+    }
     private void SaveScores()
     {
         gameData.players.Clear();
 
-        gameData.players.Add(new PlayerData { playerName = "Player 1", score = player1.GetCoinCount() });
-        gameData.players.Add(new PlayerData { playerName = "Player 2", score = player2.GetCoinCount() });
+        gameData.players.Add(new PlayerData { playerName = "Player 1", score = Mathf.CeilToInt(player1.GetCoinCount() * 200 + player1.transform.position.z * 1.5f) });
+        gameData.players.Add(new PlayerData { playerName = "Player 2", score = Mathf.CeilToInt(player2.GetCoinCount() * 200 + player2.transform.position.z * 1.5f) });
 
         SaveManager.SaveGame(gameData);
 
         int highScore = SaveManager.LoadHighScore();
         int currentScore1 = Mathf.CeilToInt(player1.GetCoinCount() * 200 + player1.transform.position.z * 1.5f); 
-        int currentScore2 = Mathf.CeilToInt(player1.GetCoinCount() * 200 + player1.transform.position.z * 1.5f);
+        int currentScore2 = Mathf.CeilToInt(player2.GetCoinCount() * 200 + player2.transform.position.z * 1.5f);
         
         int currentHighScore = Mathf.Max(currentScore1, currentScore2);
         
