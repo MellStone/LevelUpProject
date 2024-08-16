@@ -99,10 +99,6 @@ public class PlayerController : MonoBehaviour
         Vector3 targetPosition = new Vector3(lanes[currentLane], transform.position.y, transform.position.z);
         transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * laneSwitchSpeed);
         
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
-        {
-            WebSocketServerBehavior.ResetClients();
-        }
     }
 
     private void LaneSwitchAnimate(int direction)

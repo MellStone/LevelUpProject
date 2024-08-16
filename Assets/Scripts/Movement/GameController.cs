@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using UnityEngine.PlayerLoop;
 
 public class GameController : MonoBehaviour
 {
@@ -14,7 +15,9 @@ public class GameController : MonoBehaviour
     public TextMeshProUGUI countdownText; // UI Text for countdown display
     public Button startButton; // Button to start the game
     public Button restartButton; // Button to restart the game
+    public GameObject ipText;
     public CanvasGroup loseCanvas;
+    public CameraFollow _cameraFollow;
     public PlayerController player1;
     public PlayerController player2;
     
@@ -58,11 +61,11 @@ public class GameController : MonoBehaviour
 
     public void StartGame()
     {
-        Debug.Log("GameStarted");
         // Start countdown and game
         startButton.gameObject.SetActive(false); // Hide the start button
-        Debug.Log("GameStarted");
+        ipText.gameObject.SetActive(false);
         isInMenu = false;
+        _cameraFollow.CameraIntro();
         StartCoroutine(CountdownCoroutine());
     }
 

@@ -68,7 +68,7 @@ public class WebSocketServerBehavior : WebSocketBehavior
         {
             case "special_mid":
                 Debug.Log("Start game command received from menu");
-                GameController.Instance.RestartGame();
+                WebSocketRepeater.Instance.restartGame = true;
                 break;
             default:
                 Debug.Log($"Unknown menu command: {command}");
@@ -82,7 +82,7 @@ public class WebSocketServerBehavior : WebSocketBehavior
         {
             case "special_mid":
                 Debug.Log("Start game command received from pre comand");
-                GameController.Instance.Invoke("StartGame",0f);
+                WebSocketRepeater.Instance.startGame = true;
                 break;
             default:
                 Debug.Log($"Unknown pre-game command: {command}");

@@ -28,11 +28,11 @@ public class MultiplayerSystem : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("WhiteLine") && isWinner)
+        if (other.gameObject.CompareTag("WhitePoint"))
         {
-
+            
         }
     }
 
