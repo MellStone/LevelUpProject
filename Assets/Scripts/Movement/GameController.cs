@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     public float speedIncreaseRate = 0.1f;
     public TextMeshProUGUI countdownText;
     public Button startButton;
+    public GameObject startButton2;
     public Button restartButton;
     public GameObject ipText;
     public GameObject guideNameText;
@@ -20,6 +21,7 @@ public class GameController : MonoBehaviour
     public CameraFollow _cameraFollow;
     public PlayerController player1;
     public PlayerController player2;
+    public SpriteRenderer expIMG;
     
     public TextMeshProUGUI highScoreText;
     public TextMeshProUGUI leaderboardText;
@@ -61,6 +63,7 @@ public class GameController : MonoBehaviour
 
         // Подписываем кнопку старта на метод StartGame
         startButton.onClick.AddListener(StartGame);
+        startButton2.GetComponent<Button>().onClick.AddListener(StartGame);
 
         countdownText.gameObject.SetActive(false);
         loseCanvas.gameObject.SetActive(false);
@@ -84,6 +87,8 @@ public class GameController : MonoBehaviour
         ipText.gameObject.SetActive(false);
         guideNameText.gameObject.SetActive(false);
         HidePlayerNames(true);
+
+        startButton2.gameObject.SetActive(false);
         
         
         player1.enabled = true;
@@ -119,6 +124,8 @@ public class GameController : MonoBehaviour
         // Скрываем кнопки рестарта и проигрыша, показываем меню ввода имен игроков
         loseCanvas.gameObject.SetActive(false);
         restartButton.gameObject.SetActive(false);
+        expIMG.gameObject.SetActive(true);
+
         HidePlayerNames(false);
 
         // Ожидаем, пока игроки введут свои имена и нажмут кнопку подтверждения
