@@ -40,6 +40,15 @@ public class PlayerController : MonoBehaviour
         { 1, new List<GameObject>() },
         { 2, new List<GameObject>() }
     };
+    
+    
+    private bool moveLeftRepeat = false;
+    private bool moveRightRepeat = false;
+    private bool specialLeftRepeat = false;
+    private bool specialRightRepeat = false;
+    private bool specialMidRepeat = false;
+    
+    
     private void Start()
     {
         sequence = gameObject.AddComponent<RandomSequenceGenerator>();
@@ -85,6 +94,41 @@ public class PlayerController : MonoBehaviour
 
         rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, forwardSpeed);
 
+        if (moveLeftRepeat)
+        {
+            HandleLaneSwitch(-1);
+            moveLeftRepeat = false;
+        }
+
+        if (moveRightRepeat)
+        {
+            HandleLaneSwitch(1);
+            moveRightRepeat = false;
+        }
+
+        if (specialLeftRepeat)
+        {
+            HandleSpecialSwitch(-1);
+            specialLeftRepeat = false;
+        }
+
+        if (specialRightRepeat)
+        {
+            HandleSpecialSwitch(1);
+            specialRightRepeat = false;
+        }
+
+        if (specialMidRepeat)
+        {
+            HandleSpecialSwitch(0);
+            specialMidRepeat = false;
+        }
+
+        if (turnDirection != 0)
+        {
+            LaneSwitchAnimate(turnDirection);
+            turnDirection = 0;
+        }
         if (Input.GetKeyDown(leftKey))
         {
             HandleLaneSwitch(-1);
@@ -99,9 +143,33 @@ public class PlayerController : MonoBehaviour
             LaneSwitchAnimate(turnDirection);
             turnDirection = 0;
         }
-
         Vector3 targetPosition = CalculateTargetPosition(currentLane);
         transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * laneSwitchSpeed);
+    }
+
+    public void RepeatMoveLeft()
+    {
+        moveLeftRepeat = true;
+    }
+
+    public void RepeatMoveRight()
+    {
+        moveRightRepeat = true;
+    }
+
+    public void RepeatSpecialLeft()
+    {
+        specialLeftRepeat = true;
+    }
+
+    public void RepeatSpecialRight()
+    {
+        specialRightRepeat = true;
+    }
+
+    public void RepeatSpecialMid()
+    {
+        specialMidRepeat = true;
     }
 
     private void LaneSwitchAnimate(int direction)
@@ -124,6 +192,7 @@ public class PlayerController : MonoBehaviour
 
     public void HandleLaneSwitch(int direction)
     {
+        Debug.Log("switch lane");
         playersOnEachLane[currentLane].Remove(gameObject); // Удаление игрока из текущей линии
         currentLane = Mathf.Clamp(currentLane + direction, 0, lanes.Length - 1);
         playersOnEachLane[currentLane].Add(gameObject); // Добавление игрока на новую линию

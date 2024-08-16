@@ -84,6 +84,10 @@ public class WebSocketServerBehavior : WebSocketBehavior
                 Debug.Log("Start game command received from pre comand");
                 WebSocketRepeater.Instance.startGame = true;
                 break;
+            case "special_right":
+                Debug.Log("Start game command received from pre comand");
+                WebSocketRepeater.Instance.hidePlayerName = true;
+                break;
             default:
                 Debug.Log($"Unknown pre-game command: {command}");
                 break;
@@ -96,29 +100,30 @@ public class WebSocketServerBehavior : WebSocketBehavior
         {
             case "move_left":
                 Debug.Log("Move left command received");
-                player.HandleLaneSwitch(-1);
+                player.RepeatMoveLeft();
                 break;
             case "move_right":
                 Debug.Log("Move right command received");
-                player.HandleLaneSwitch(1);
+                player.RepeatMoveRight();
                 break;
             case "special_left":
                 Debug.Log("Special left command received");
-                player.HandleSpecialSwitch(-1);
+                player.RepeatSpecialLeft();
                 break;
             case "special_right":
                 Debug.Log("Special right command received");
-                player.HandleSpecialSwitch(1);
+                player.RepeatSpecialRight();
                 break;
             case "special_mid":
                 Debug.Log("Special mid command received");
-                player.HandleSpecialSwitch(0);
+                player.RepeatSpecialMid();
                 break;
             default:
                 Debug.Log($"Unknown game command: {command}");
                 break;
         }
     }
+
 
     // Метод для сброса клиентов
     public static void ResetClients()
