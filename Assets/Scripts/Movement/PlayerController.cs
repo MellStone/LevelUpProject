@@ -1,20 +1,20 @@
+using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI; // Добавлено для работы с UI-кнопками
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     public float laneSwitchSpeed = 10f;
-    public TextMeshProUGUI speedText; // UI Text for speed display
-    public TextMeshProUGUI timeText; // UI Text for time display
+    public TextMeshProUGUI speedText;
+    public TextMeshProUGUI timeText;
     public TextMeshProUGUI coinText;
     public Transform coinPocket;
     public AudioSource soundSource;
     public KeyCode leftKey = KeyCode.None;
     public KeyCode rightKey = KeyCode.None;
-
-    public Button startButton; // Кнопка для начала игры
+    public Button startButton;
 
     private Rigidbody rb;
     private int currentLane = 1; // Middle start (left = 0, center = 1, right = 2) 
@@ -33,6 +33,13 @@ public class PlayerController : MonoBehaviour
     private GameController gameManager;
     private RandomSequenceGenerator sequence;
 
+    private static int[] playersOnLane = { 0, 0, 0 }; // Count of players on each lane
+    private static Dictionary<int, List<GameObject>> playersOnEachLane = new Dictionary<int, List<GameObject>>()
+    {
+        { 0, new List<GameObject>() },
+        { 1, new List<GameObject>() },
+        { 2, new List<GameObject>() }
+    };
     private void Start()
     {
         sequence = gameObject.AddComponent<RandomSequenceGenerator>();
@@ -40,6 +47,7 @@ public class PlayerController : MonoBehaviour
         speedText.gameObject.SetActive(false);
         timeText.gameObject.SetActive(false);
         coinText.gameObject.SetActive(false);
+        playersOnEachLane[currentLane].Add(gameObject);
     }
 
     public void StartGame(float initialSpeed)
@@ -61,25 +69,22 @@ public class PlayerController : MonoBehaviour
     {
         isShouldStop = true;
         isGameOvered = true;
-        rb.velocity = Vector3.zero; // Остановить движение игрока
+        rb.velocity = Vector3.zero;
+        playersOnLane[currentLane]--; // Уменьшение счетчика игроков на текущей линии
     }
 
     private void Update()
     {
         if (isShouldStop) return;
         
-        // Увеличение скорости со временем
         elapsedTime += Time.deltaTime;
         forwardSpeed += Time.deltaTime * GameController.Instance.speedIncreaseRate;
 
-        // Обновление UI
         speedText.text = "Speed: " + forwardSpeed.ToString("F2") + " m/s";
         timeText.text = "Time: " + elapsedTime.ToString("F2") + " s";
 
-        // Движение игрока вперед
         rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, forwardSpeed);
 
-        // Переключение между линиями
         if (Input.GetKeyDown(leftKey))
         {
             HandleLaneSwitch(-1);
@@ -95,15 +100,12 @@ public class PlayerController : MonoBehaviour
             turnDirection = 0;
         }
 
-        // Плавное перемещение игрока в целевую позицию линии
-        Vector3 targetPosition = new Vector3(lanes[currentLane], transform.position.y, transform.position.z);
+        Vector3 targetPosition = CalculateTargetPosition(currentLane);
         transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * laneSwitchSpeed);
-        
     }
 
     private void LaneSwitchAnimate(int direction)
     {
-
         if (direction == -1)
         {
             controllerSprite.transform.DORotate(new Vector3(90f, -45f, 0f), 0.2f).OnComplete(() =>
@@ -122,10 +124,29 @@ public class PlayerController : MonoBehaviour
 
     public void HandleLaneSwitch(int direction)
     {
+        playersOnEachLane[currentLane].Remove(gameObject); // Удаление игрока из текущей линии
         currentLane = Mathf.Clamp(currentLane + direction, 0, lanes.Length - 1);
+        playersOnEachLane[currentLane].Add(gameObject); // Добавление игрока на новую линию
         turnDirection = direction;
     }
 
+    private Vector3 CalculateTargetPosition(int laneIndex)
+    {
+        float basePosition = lanes[laneIndex];
+        List<GameObject> playersOnLane = playersOnEachLane[laneIndex];
+        int playerIndex = playersOnLane.IndexOf(gameObject);
+
+        // В зависимости от позиции игрока на линии устанавливаем его смещение
+        if (playersOnLane.Count == 1)
+        {
+            return new Vector3(basePosition, transform.position.y, transform.position.z);
+        }
+        else if (playersOnLane.Count == 2)
+        {
+            return new Vector3(basePosition + (playerIndex == 0 ? -0.9f : 0.9f), transform.position.y, transform.position.z);
+        }
+        return new Vector3(basePosition, transform.position.y, transform.position.z);
+    }
     public void HandleSpecialSwitch(int direction) // -1 left, 0 mid, 1 right;
     {
         sequence.PlaySequence(direction);
@@ -146,6 +167,11 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
+    private bool IsFirstPlayerOnLane()
+    {
+        // Простейшая логика для определения, первый ли это игрок на линии
+        return transform.position.x < lanes[currentLane];
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -163,7 +189,7 @@ public class PlayerController : MonoBehaviour
         {
             if (GameController.Instance.isMultiplayer)
             {
-                
+                // Логика для мультиплеера
             }
             else
             {
@@ -188,5 +214,9 @@ public class PlayerController : MonoBehaviour
     public float GetElapsedTime()
     {
         return elapsedTime;
+    }
+    private void OnDestroy()
+    {
+        playersOnEachLane[currentLane].Remove(gameObject);
     }
 }

@@ -7,11 +7,12 @@
     <list default="true" id="d8099e8e-e93a-46bd-b73c-482df5678160" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LevelUpProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LevelUpProject/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/DevelopMulityplayerScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/DevelopMulityplayerScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Movement/GameController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Movement/GameController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Movement/PathManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Movement/PathManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Movement/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Movement/PlayerController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Multiplayer/MultiplayerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Multiplayer/MultiplayerSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Server/WebSocketServerBehavior.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Server/WebSocketServerBehavior.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/DynamicsManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/DynamicsManager.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +127,7 @@
       <workItem from="1723628114887" duration="4814000" />
       <workItem from="1723666704089" duration="2990000" />
       <workItem from="1723716773224" duration="28678000" />
-      <workItem from="1723793927834" duration="2659000" />
+      <workItem from="1723793927834" duration="6679000" />
     </task>
     <servers />
   </component>
