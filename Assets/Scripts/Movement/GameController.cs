@@ -48,10 +48,12 @@ public class GameController : MonoBehaviour
 
         // Setup start button
         startButton.onClick.AddListener(StartGame);
-
+        
+        
         // Setup countdown display
         countdownText.gameObject.SetActive(false);
-        
+        loseCanvas.gameObject.SetActive(false);
+        restartButton.gameObject.SetActive(false);
     }
 
     public void StartGame()
@@ -96,7 +98,8 @@ public class GameController : MonoBehaviour
             // Если второй игрок активен, проверяем, завершили ли игру оба игрока
             if (player2.isGameOvered && player1.isGameOvered)
             {
-                loseCanvas.alpha = 1f;
+                loseCanvas.gameObject.SetActive(true);
+                restartButton.gameObject.SetActive(true);
                 DisplayTop10();
                 isInMenu = true;
                 isGameOver = true;
@@ -105,7 +108,8 @@ public class GameController : MonoBehaviour
         else
         {
             // Если второй игрок не активен, сразу показываем таблицу лидеров
-            loseCanvas.alpha = 1f;
+            loseCanvas.gameObject.SetActive(true);
+            restartButton.gameObject.SetActive(true);
             DisplayTop10();
             isInMenu = true;
             isGameOver = true;

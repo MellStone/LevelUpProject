@@ -34,9 +34,9 @@
             flex: 1;
             margin: 10px;
             padding: 15px 20px;
-            font-size: 72px;
+            font-size: 64px;
             color: white;
-            background-color: #007bff;
+            background-color: #3F99C8;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -45,11 +45,11 @@
         }
 
         .btn:hover {
-            background-color: #0056b3;
+            background-color: #358bb9;
         }
 
         .btn:active {
-            background-color: #004494;
+            background-color: #67aed3;
         }
     </style>
     <script>
@@ -92,14 +92,14 @@
 </head>
 <body>
 <div class="top-row">
-    <button class="btn" onclick="sendCommand('special_left')">Action</button>
-    <button class="btn" onclick="sendCommand('special_mid')">🡹</button>
-    <button class="btn" onclick="sendCommand('special_right')">Action</button>
+    <button class="btn" onclick="sendCommand('special_left')">⭘</button>
+    <button class="btn" onclick="sendCommand('special_mid')">✪</button>
+    <button class="btn" onclick="sendCommand('special_right')">⭘</button>
 </div>
 
 <div class="bottom-row">
-    <button class="btn" onclick="sendCommand('move_left')">🡸</button>
-    <button class="btn" onclick="sendCommand('move_right')">🡺</button>
+    <button class="btn" onclick="sendCommand('move_left')">←</button>
+    <button class="btn" onclick="sendCommand('move_right')">→</button>
 </div>
 </body>
 </html>
