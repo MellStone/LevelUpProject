@@ -24,10 +24,11 @@ public class GameController : MonoBehaviour
     public TextMeshProUGUI highScoreText;
     public TextMeshProUGUI leaderboardText;
 
-    // Новые поля для ввода имени игроков
+    // Поля для ввода имени игроков
     public GameObject playerNamesMenu;
     public TMP_InputField player1NameInput;
     public TMP_InputField player2NameInput;
+    public Button submitNamesButton; // Новая кнопка для подтверждения имени
 
     private string player1Name = "Player 1";
     private string player2Name = "Player 2";
@@ -64,6 +65,12 @@ public class GameController : MonoBehaviour
         countdownText.gameObject.SetActive(false);
         loseCanvas.gameObject.SetActive(false);
         restartButton.gameObject.SetActive(false);
+
+        player1.enabled = false;
+        player2.enabled = false;
+
+        // Подписываем кнопку подтверждения имен на метод SubmitNames
+        submitNamesButton.onClick.AddListener(SubmitNames);
     }
 
     public void StartGame()
@@ -77,6 +84,10 @@ public class GameController : MonoBehaviour
         ipText.gameObject.SetActive(false);
         guideNameText.gameObject.SetActive(false);
         HidePlayerNames(true);
+        
+        
+        player1.enabled = true;
+        player2.enabled = true;
         
         isInMenu = false;
         _cameraFollow.CameraIntro();
@@ -105,34 +116,41 @@ public class GameController : MonoBehaviour
 
     public void GameOver()
     {
-        SaveScores();
+        // Скрываем кнопки рестарта и проигрыша, показываем меню ввода имен игроков
+        loseCanvas.gameObject.SetActive(false);
+        restartButton.gameObject.SetActive(false);
+        HidePlayerNames(false);
 
-        if (player2.isActiveAndEnabled)
-        {
-            if (player2.isGameOvered && player1.isGameOvered)
-            {
-                loseCanvas.gameObject.SetActive(true);
-                restartButton.gameObject.SetActive(true);
-                DisplayTop10();
-                isInMenu = true;
-                isGameOver = true;
-            }
-        }
-        else
-        {
-            loseCanvas.gameObject.SetActive(true);
-            restartButton.gameObject.SetActive(true);
-            DisplayTop10();
-            isInMenu = true;
-            isGameOver = true;
-        }
+        // Ожидаем, пока игроки введут свои имена и нажмут кнопку подтверждения
+    }
+
+    public void SubmitNames()
+    {
+        // Получаем имена игроков из InputField
+        player1Name = string.IsNullOrEmpty(player1NameInput.text) ? "Player 1" : player1NameInput.text;
+        player2Name = string.IsNullOrEmpty(player2NameInput.text) ? "Player 2" : player2NameInput.text;
+
+        // Сохраняем результаты и показываем лидерборд
+        SaveScores();
+        DisplayTop10();
+
+        // Скрываем меню ввода имен
+        HidePlayerNames(true);
+
+        // Показываем интерфейс проигрыша и кнопку рестарта
+        loseCanvas.gameObject.SetActive(true);
+        restartButton.gameObject.SetActive(true);
+
+        isInMenu = true;
+        isGameOver = true;
     }
 
     public void HidePlayerNames(bool state)
     {
-        if(isInMenu)
-            playerNamesMenu.gameObject.SetActive(!state);
+        playerNamesMenu.gameObject.SetActive(!state);
+        submitNamesButton.gameObject.SetActive(!state);
     }
+
     public void RestartGame()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
@@ -142,6 +160,7 @@ public class GameController : MonoBehaviour
     {
         gameData.players.Clear();
     }
+
     private void DisplayTop10()
     {
         List<PlayerData> players = gameData.players;
@@ -159,14 +178,21 @@ public class GameController : MonoBehaviour
 
     private void SaveScores()
     {
-        gameData.players.Add(new PlayerData { playerName = player1Name, score = Mathf.CeilToInt(player1.GetCoinCount() * 200 + player1.transform.position.z * 1.5f) });
-        gameData.players.Add(new PlayerData { playerName = player2Name, score = Mathf.CeilToInt(player2.GetCoinCount() * 200 + player2.transform.position.z * 1.5f) });
+        if (isMultiplayer)
+        {
+            gameData.players.Add(new PlayerData { playerName = player1Name, score = player1.GetScore()});
+            gameData.players.Add(new PlayerData { playerName = player2Name, score = player2.GetScore()});
+        }
+        else
+        {
+            gameData.players.Add(new PlayerData { playerName = player1Name, score = player1.GetScore()});
+        }
 
         SaveManager.SaveGame(gameData);
 
         int highScore = SaveManager.LoadHighScore();
-        int currentScore1 = Mathf.CeilToInt(player1.GetCoinCount() * 200 + player1.transform.position.z * 1.5f); 
-        int currentScore2 = Mathf.CeilToInt(player2.GetCoinCount() * 200 + player2.transform.position.z * 1.5f);
+        int currentScore1 = player1.GetScore();
+        int currentScore2 = player2.GetScore();
 
         int currentHighScore = Mathf.Max(currentScore1, currentScore2);
 

@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1500, y: 555.538}
+  m_AnchoredPosition: {x: -1425, y: 555.538}
   m_SizeDelta: {x: 600, y: 139.035}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3964554937594992707
@@ -169,7 +169,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1500, y: 257.04193}
+  m_AnchoredPosition: {x: -1425, y: 257.04193}
   m_SizeDelta: {x: 600, y: 136.139}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &468381653694494053
@@ -386,7 +386,7 @@ GameObject:
   - component: {fileID: 5664633661989168268}
   - component: {fileID: 2505585893046286728}
   m_Layer: 5
-  m_Name: speed
+  m_Name: score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -408,7 +408,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1500, y: 850.8987}
+  m_AnchoredPosition: {x: -1425, y: 850.8987}
   m_SizeDelta: {x: 600, y: 148.202}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5664633661989168268
@@ -439,7 +439,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: speed
+  m_text: score
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c1b5999f118360041800d493b7b84af0, type: 2}
   m_sharedMaterial: {fileID: 6419262520035382876, guid: c1b5999f118360041800d493b7b84af0,

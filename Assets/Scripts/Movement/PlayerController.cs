@@ -2,14 +2,17 @@ using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     public float laneSwitchSpeed = 10f;
-    public TextMeshProUGUI speedText;
+    public TextMeshProUGUI scoreText;
     public TextMeshProUGUI timeText;
     public TextMeshProUGUI coinText;
+    
     public Transform coinPocket;
     public AudioSource soundSource;
     public KeyCode leftKey = KeyCode.None;
@@ -22,7 +25,9 @@ public class PlayerController : MonoBehaviour
     private float forwardSpeed;
     private float elapsedTime = 0f;
     private int coinCount = 0;
-
+    private int score = 0;
+    
+    
     public int hP = 100;
 
     private bool isShouldStop = false;
@@ -53,7 +58,7 @@ public class PlayerController : MonoBehaviour
     {
         sequence = gameObject.AddComponent<RandomSequenceGenerator>();
         rb = GetComponent<Rigidbody>();
-        speedText.gameObject.SetActive(false);
+        scoreText.gameObject.SetActive(false);
         timeText.gameObject.SetActive(false);
         coinText.gameObject.SetActive(false);
         playersOnEachLane[currentLane].Add(gameObject);
@@ -61,6 +66,7 @@ public class PlayerController : MonoBehaviour
 
     public void StartGame(float initialSpeed)
     {
+
         forwardSpeed = initialSpeed;
         isShouldStop = false;
         isGameOvered = false;
@@ -68,12 +74,19 @@ public class PlayerController : MonoBehaviour
         coinCount = 0;
         hP = 100;
 
-        speedText.gameObject.SetActive(true);
+        scoreText.gameObject.SetActive(true);
         timeText.gameObject.SetActive(true);
         coinText.gameObject.SetActive(true);
         coinText.text = "Coins: " + coinCount;
+        
+        controllerSprite.transform.DOShakePosition(0.2f, 0.08f, 10)
+            .SetLoops(-1, LoopType.Restart);
     }
 
+    public int GetScore()
+    {
+        return score = Mathf.CeilToInt(GetCoinCount() * 200 + gameObject.transform.position.z * 1.5f);
+    }
     public void EndGame()
     {
         isShouldStop = true;
@@ -89,11 +102,24 @@ public class PlayerController : MonoBehaviour
         elapsedTime += Time.deltaTime;
         forwardSpeed += Time.deltaTime * GameController.Instance.speedIncreaseRate;
 
-        speedText.text = "Speed: " + forwardSpeed.ToString("F2") + " m/s";
-        timeText.text = "Time: " + elapsedTime.ToString("F2") + " s";
+        UpdatePersonalUI();
+
 
         rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, forwardSpeed);
 
+        WebSocketCheck();
+        Vector3 targetPosition = CalculateTargetPosition(currentLane);
+        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * laneSwitchSpeed);
+    }
+
+    private void UpdatePersonalUI()
+    {
+        scoreText.text = "Score: " + GetScore();
+        timeText.text = "Time: " + elapsedTime.ToString("F2") + " s";
+    }
+
+    private void WebSocketCheck()
+    {
         if (moveLeftRepeat)
         {
             HandleLaneSwitch(-1);
@@ -143,8 +169,6 @@ public class PlayerController : MonoBehaviour
             LaneSwitchAnimate(turnDirection);
             turnDirection = 0;
         }
-        Vector3 targetPosition = CalculateTargetPosition(currentLane);
-        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * laneSwitchSpeed);
     }
 
     public void RepeatMoveLeft()
@@ -192,7 +216,6 @@ public class PlayerController : MonoBehaviour
 
     public void HandleLaneSwitch(int direction)
     {
-        Debug.Log("switch lane");
         playersOnEachLane[currentLane].Remove(gameObject); // Удаление игрока из текущей линии
         currentLane = Mathf.Clamp(currentLane + direction, 0, lanes.Length - 1);
         playersOnEachLane[currentLane].Add(gameObject); // Добавление игрока на новую линию
