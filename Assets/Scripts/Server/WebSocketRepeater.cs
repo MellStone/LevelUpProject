@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -20,8 +21,9 @@ public class WebSocketRepeater : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        Application.targetFrameRate = 60;
     }
-
+    
     private void Start()
     {
         WebSocketServerBehavior.ResetClients();

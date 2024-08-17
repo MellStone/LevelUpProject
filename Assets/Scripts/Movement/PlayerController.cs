@@ -1,32 +1,52 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     public float laneSwitchSpeed = 10f;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI speedText;
     public TextMeshProUGUI timeText;
     public TextMeshProUGUI coinText;
+    public GameObject bonusIcon;
     
     public Transform coinPocket;
     public AudioSource soundSource;
-    public KeyCode leftKey = KeyCode.None;
-    public KeyCode rightKey = KeyCode.None;
-    public Button startButton;
-
+    public KeyCode leftKey = KeyCode.A;
+    public KeyCode rightKey = KeyCode.D;
+    public KeyCode specialUpKey = KeyCode.W;
+    public KeyCode specialDownKey = KeyCode.S;
+    public KeyCode leftKeyAdditonal = KeyCode.LeftArrow;
+    public KeyCode rightKeyAdditonal = KeyCode.RightArrow;
+    public KeyCode specialUpKeyAdditonal = KeyCode.UpArrow;
+    public KeyCode specialDownKeyAdditonal = KeyCode.DownArrow;
+    
     private Rigidbody rb;
     private int currentLane = 1; // Middle start (left = 0, center = 1, right = 2) 
     private float[] lanes = { -4f, 0f, 4f }; // Positions for lanes
     private float forwardSpeed;
+    private float previousSpeed;
+    private float baseSpeed; // Базовая скорость, которая не изменяется
+    private float currentSpeedModifier = 1f; // Текущий модификатор скорости
+    private float targetSpeedModifier = 1f;
+    public float transitionDuration = 0.4f;
+    private bool isOnWhiteLine = false;
+    
+    [SerializeField]
+    private float increseSpeed = 1.3f;
+    [SerializeField]
+    private float decreaseSpeed = 0.4f;
+    private float bonusDuration = 3f;
+        
     private float elapsedTime = 0f;
     private int coinCount = 0;
     private int score = 0;
-    
+    public bool hasBonus = false;
     
     public int hP = 100;
 
@@ -58,7 +78,9 @@ public class PlayerController : MonoBehaviour
     {
         sequence = gameObject.AddComponent<RandomSequenceGenerator>();
         rb = GetComponent<Rigidbody>();
+        baseSpeed = forwardSpeed;
         scoreText.gameObject.SetActive(false);
+        speedText.gameObject.SetActive(false);
         timeText.gameObject.SetActive(false);
         coinText.gameObject.SetActive(false);
         playersOnEachLane[currentLane].Add(gameObject);
@@ -66,15 +88,19 @@ public class PlayerController : MonoBehaviour
 
     public void StartGame(float initialSpeed)
     {
-
+        baseSpeed = initialSpeed; // Сохраняем исходную скорость в момент старта игры
+        forwardSpeed = baseSpeed;
+        currentSpeedModifier = 1f; // Сбрасываем все модификаторы скорости
         forwardSpeed = initialSpeed;
         isShouldStop = false;
         isGameOvered = false;
         elapsedTime = 0f;
         coinCount = 0;
         hP = 100;
-
+        targetSpeedModifier = 1f;
+        
         scoreText.gameObject.SetActive(true);
+        speedText.gameObject.SetActive(true);
         timeText.gameObject.SetActive(true);
         coinText.gameObject.SetActive(true);
         coinText.text = "Coins: " + coinCount;
@@ -100,24 +126,70 @@ public class PlayerController : MonoBehaviour
         if (isShouldStop) return;
         
         elapsedTime += Time.deltaTime;
-        forwardSpeed += Time.deltaTime * GameController.Instance.speedIncreaseRate;
-
-        UpdatePersonalUI();
-
-
+        baseSpeed += Time.deltaTime * GameController.Instance.speedIncreaseRate; // Обновляем базовую скорость
+        
+        forwardSpeed = baseSpeed * currentSpeedModifier;
         rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, forwardSpeed);
-
+       
+        TurnLineCheck();
+        KeyInput();
         WebSocketCheck();
+        TurnLineCheck();
+        UpdatePersonalUI();
+        
         Vector3 targetPosition = CalculateTargetPosition(currentLane);
         transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * laneSwitchSpeed);
+    }
+
+    private void TurnLineCheck()
+    {
+        if (turnDirection != 0)
+        {
+            LaneSwitchAnimate(turnDirection);
+            turnDirection = 0;
+        }
     }
 
     private void UpdatePersonalUI()
     {
         scoreText.text = "Score: " + GetScore();
+        speedText.text = "Speed: " + forwardSpeed.ToString("F1") + " m/s";
         timeText.text = "Time: " + elapsedTime.ToString("F2") + " s";
     }
 
+    private void UpdateBonusUI()
+    {
+        if (hasBonus)
+        {
+            bonusIcon.SetActive(true);
+        }
+        else
+        {
+            bonusIcon.SetActive(false);
+        }
+        
+    }
+    private void KeyInput()
+    {
+        if (Input.GetKeyDown(leftKey) || Input.GetKeyDown(leftKeyAdditonal))
+        {
+            HandleLaneSwitch(-1);
+        }
+        else if (Input.GetKeyDown(rightKey) || Input.GetKeyDown(rightKeyAdditonal))
+        {
+            HandleLaneSwitch(1);
+        }
+        if (Input.GetKeyDown(specialUpKey) || Input.GetKeyDown(specialUpKeyAdditonal))
+        {
+            UseFastDownBonus();
+        }
+        else if (Input.GetKeyDown(specialDownKey) || Input.GetKeyDown(specialDownKeyAdditonal))
+        {
+            UseSlowDownBonus();
+        }
+
+    }
+    
     private void WebSocketCheck()
     {
         if (moveLeftRepeat)
@@ -148,26 +220,6 @@ public class PlayerController : MonoBehaviour
         {
             HandleSpecialSwitch(0);
             specialMidRepeat = false;
-        }
-
-        if (turnDirection != 0)
-        {
-            LaneSwitchAnimate(turnDirection);
-            turnDirection = 0;
-        }
-        if (Input.GetKeyDown(leftKey))
-        {
-            HandleLaneSwitch(-1);
-        }
-        else if (Input.GetKeyDown(rightKey))
-        {
-            HandleLaneSwitch(1);
-        }
-
-        if (turnDirection != 0)
-        {
-            LaneSwitchAnimate(turnDirection);
-            turnDirection = 0;
         }
     }
 
@@ -289,8 +341,72 @@ public class PlayerController : MonoBehaviour
                 GameController.Instance.GameOver();
             }
         }
+        if (other.gameObject.CompareTag("WhitePoint"))
+        {
+            hasBonus = true; // Игрок получает бонус при входе на WhitePoint
+            UpdateBonusUI();
+        }
     }
 
+    // Ускорение на белой линии
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("WhiteLine"))
+        {
+            if (!isOnWhiteLine)
+            {
+                ChangeSpeedModifier(increseSpeed);
+                isOnWhiteLine = true;
+            }
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("WhiteLine"))
+        {
+            isOnWhiteLine = false;
+            ChangeSpeedModifier(1f);
+        }
+    }
+    // Метод для использования бонуса замедления
+    public void UseSlowDownBonus()
+    {
+        if (hasBonus)
+        {
+            StartCoroutine(SlowDown());
+            hasBonus = false; // После использования бонус пропадает
+            UpdateBonusUI();
+        }
+    }
+    public void UseFastDownBonus()
+    {
+        if (hasBonus)
+        {
+            StartCoroutine(FastDown());
+            hasBonus = false; // После использования бонус пропадает
+            UpdateBonusUI();
+        }
+    }
+
+    // Замедление игрока на короткое время
+    private IEnumerator SlowDown()
+    {
+        ChangeSpeedModifier(decreaseSpeed);
+        yield return new WaitForSeconds(bonusDuration); // Длительность замедления
+        ChangeSpeedModifier(1f);
+    }
+    private IEnumerator FastDown()
+    {
+        ChangeSpeedModifier(increseSpeed);
+        yield return new WaitForSeconds(bonusDuration); // Длительность замедления
+        ChangeSpeedModifier(1f);
+    }
+    private void ChangeSpeedModifier(float newModifier)
+    {
+        // Плавно изменяем currentSpeedModifier с использованием DOTween
+        DOTween.To(() => currentSpeedModifier, x => currentSpeedModifier = x, newModifier, transitionDuration);
+    }
     public void GetDamage(int damage)
     {
         hP -= damage;

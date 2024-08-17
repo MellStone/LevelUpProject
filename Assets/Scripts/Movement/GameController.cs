@@ -18,6 +18,8 @@ public class GameController : MonoBehaviour
     public GameObject ipText;
     public GameObject guideNameText;
     public CanvasGroup loseCanvas;
+    public GameObject player1Canvas;
+    public GameObject player2Canvas;
     public CameraFollow _cameraFollow;
     public PlayerController player1;
     public PlayerController player2;
@@ -67,6 +69,8 @@ public class GameController : MonoBehaviour
 
         countdownText.gameObject.SetActive(false);
         loseCanvas.gameObject.SetActive(false);
+        player1Canvas.gameObject.SetActive(false);
+        player2Canvas.gameObject.SetActive(false);
         restartButton.gameObject.SetActive(false);
 
         player1.enabled = false;
@@ -89,7 +93,16 @@ public class GameController : MonoBehaviour
         HidePlayerNames(true);
 
         startButton2.gameObject.SetActive(false);
-        
+
+        if (isMultiplayer)
+        {
+            player1Canvas.gameObject.SetActive(true);
+            player2Canvas.gameObject.SetActive(true);
+        }
+        else
+        {
+            player1Canvas.gameObject.SetActive(true);
+        }
         
         player1.enabled = true;
         player2.enabled = true;
@@ -115,6 +128,8 @@ public class GameController : MonoBehaviour
 
         countdownText.gameObject.SetActive(false);
 
+        
+        
         player1.StartGame(forwardSpeed);
         player2.StartGame(forwardSpeed);
     }
