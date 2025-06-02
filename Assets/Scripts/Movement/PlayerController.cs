@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float decreaseSpeed = 0.4f;
     private float bonusDuration = 3f;
-        
+    
     private float elapsedTime = 0f;
     private int coinCount = 0;
     private int score = 0;
@@ -169,6 +169,7 @@ public class PlayerController : MonoBehaviour
         }
         
     }
+
     private void KeyInput()
     {
         if (Input.GetKeyDown(leftKey) || Input.GetKeyDown(leftKeyAdditonal))
@@ -187,9 +188,18 @@ public class PlayerController : MonoBehaviour
         {
             UseSlowDownBonus();
         }
-
     }
-    
+
+    public void MobileKeyInputLeft()
+    {
+        HandleLaneSwitch(-1);
+    }
+
+    public void MobileKeyInputRight()
+    {
+        HandleLaneSwitch(1);
+    }
+
     private void WebSocketCheck()
     {
         if (moveLeftRepeat)
