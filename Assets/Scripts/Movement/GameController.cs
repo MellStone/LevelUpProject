@@ -29,7 +29,6 @@ public class GameController : MonoBehaviour
     public TextMeshProUGUI leaderboardText;
 
     // Поля для ввода имени игроков
-    public GameObject playerNamesMenu;
     public TMP_InputField player1NameInput;
     public TMP_InputField player2NameInput;
     public Button submitNamesButton; // Новая кнопка для подтверждения имени
@@ -68,7 +67,6 @@ public class GameController : MonoBehaviour
         startButton2.GetComponent<Button>().onClick.AddListener(StartGame);
 
         countdownText.gameObject.SetActive(false);
-        loseCanvas.gameObject.SetActive(false);
         player1Canvas.gameObject.SetActive(false);
         player2Canvas.gameObject.SetActive(false);
         restartButton.gameObject.SetActive(false);
@@ -137,9 +135,11 @@ public class GameController : MonoBehaviour
     public void GameOver()
     {
         // Скрываем кнопки рестарта и проигрыша, показываем меню ввода имен игроков
-        loseCanvas.gameObject.SetActive(false);
         restartButton.gameObject.SetActive(false);
         expIMG.gameObject.SetActive(true);
+        
+        loseCanvas.interactable = true;
+        loseCanvas.alpha = 1f;
 
         HidePlayerNames(false);
 
@@ -158,9 +158,10 @@ public class GameController : MonoBehaviour
 
         // Скрываем меню ввода имен
         HidePlayerNames(true);
-
-        // Показываем интерфейс проигрыша и кнопку рестарта
-        loseCanvas.gameObject.SetActive(true);
+        
+        loseCanvas.interactable = true;
+        loseCanvas.alpha = 1f;
+        
         restartButton.gameObject.SetActive(true);
 
         isInMenu = true;
@@ -169,7 +170,6 @@ public class GameController : MonoBehaviour
 
     public void HidePlayerNames(bool state)
     {
-        playerNamesMenu.gameObject.SetActive(!state);
         submitNamesButton.gameObject.SetActive(!state);
     }
 

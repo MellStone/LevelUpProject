@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour
     {
         isShouldStop = true;
         isGameOvered = true;
-        rb.velocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
         playersOnLane[currentLane]--; // Уменьшение счетчика игроков на текущей линии
     }
 
@@ -129,7 +129,7 @@ public class PlayerController : MonoBehaviour
         baseSpeed += Time.deltaTime * GameController.Instance.speedIncreaseRate; // Обновляем базовую скорость
         
         forwardSpeed = baseSpeed * currentSpeedModifier;
-        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, forwardSpeed);
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, forwardSpeed);
        
         TurnLineCheck();
         KeyInput();

@@ -56,7 +56,7 @@ public class CameraFollow : MonoBehaviour
             Rigidbody rb = player.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                return rb.velocity.sqrMagnitude > 0.1f; // Проверяем, движется ли игрок
+                return rb.linearVelocity.sqrMagnitude > 0.1f; // Проверяем, движется ли игрок
             }
         }
         return false;
