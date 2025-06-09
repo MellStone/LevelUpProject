@@ -139,6 +139,11 @@ public class PlayerController : MonoBehaviour
         
         Vector3 targetPosition = CalculateTargetPosition(currentLane);
         transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * laneSwitchSpeed);
+
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.G))
+        {
+            GameController.Instance.ResetHighScore();
+        }
     }
 
     private void TurnLineCheck()
@@ -297,7 +302,8 @@ public class PlayerController : MonoBehaviour
         }
         else if (playersOnLane.Count == 2)
         {
-            return new Vector3(basePosition + (playerIndex == 0 ? -0.9f : 0.9f), transform.position.y, transform.position.z);
+            //return new Vector3(basePosition + (playerIndex == 0 ? -0.9f : 0.9f), transform.position.y, transform.position.z);
+            return new Vector3(basePosition, transform.position.y, transform.position.z);
         }
         return new Vector3(basePosition, transform.position.y, transform.position.z);
     }

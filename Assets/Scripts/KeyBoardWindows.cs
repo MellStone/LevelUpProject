@@ -11,6 +11,8 @@ public class KeyBoardWindows : MonoBehaviour
     private void Start()
     {
         inputField.onSelect.AddListener(OnInputSelected);
+
+        CloseOnScreenKeyboards();
     }
 
     private void OnInputSelected(string text)
@@ -39,5 +41,28 @@ public class KeyBoardWindows : MonoBehaviour
         }
 #endif
     }
-}
 
+    public void CloseOnScreenKeyboards()
+    {
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+        KillProcessByName("osk.exe");
+        KillProcessByName("TabTip.exe");
+#endif
+    }
+
+    void KillProcessByName(string processName)
+    {
+        try
+        {
+            Process[] processes = Process.GetProcessesByName(processName);
+            foreach (Process p in processes)
+            {
+                p.Kill();
+            }
+        }
+        catch (System.Exception ex)
+        {
+            UnityEngine.Debug.LogError($"Failed to kill {processName}: {ex.Message}");
+        }
+    }
+}

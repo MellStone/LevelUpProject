@@ -76,6 +76,8 @@ public class GameController : MonoBehaviour
 
         // Подписываем кнопку подтверждения имен на метод SubmitNames
         submitNamesButton.onClick.AddListener(SubmitNames);
+
+
     }
 
     public void StartGame()
@@ -181,6 +183,7 @@ public class GameController : MonoBehaviour
     public void ResetHighScore()
     {
         gameData.players.Clear();
+        SaveManager.SaveHighScore(0);
     }
 
     private void DisplayTop10()
